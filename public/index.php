@@ -1,63 +1,120 @@
+<?php
+require_once '../includes/db.php';
+
+$stmt = $pdo->query("SELECT * FROM students");
+$students = $stmt->fetchAll();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CRUD Operations</title>
-    <link   rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-    <nav class="navbar">
-            <img src="../images/northhub.svg" id="logo"></img>
-            <button class="navbarbuttons" onclick="showSection('create')"> Create </button>
-            <button class="navbarbuttons" > Read </button>
-            <button class="navbarbuttons" > Update </button>
-            <button class="navbarbuttons" > Delete </button>
-    </nav>
-    <section id="home" class="homecontent"> 
-        <h1 class="splash">Welcome to Student Management System</h1>
-        <h2 class="splash">A Project in Integrative Programming Technologies</h2>
-    </section>
-    
-    <section id="create" class="content">
-        <h1 class="contenttitle"> Insert New Student </h1>
+
+<nav class="navbar">
+    <img src="../images/Logo.jpg" id="logo" onclick="goHome()">
+
+
+    <button class="navbarbuttons" onclick="showSection('create')">Create</button>
+    <button class="navbarbuttons" onclick="showSection('read')">Read</button>
+    <button class="navbarbuttons" onclick="showSection('update')">Update</button>
+    <button class="navbarbuttons" onclick="showSection('delete')">Delete</button>
+
+</nav>
+</nav>
+</nav>
+
+<!-- HOME -->
+<section id="home" class="homecontent">
+    <h1>Welcome to Student Management System</h1>
+    <h2>A Project in Integrative Programming Technologies</h2>
+</section>
+
+<!-- CREATE -->
+<section id="create" class="content">
+    <h1>Insert New Student</h1>
 
     <form action="../includes/insert.php" method="POST">
-        <label for="surname" class="label">Surname</label>
-        <input type="text" name="surname" id="surname" class="field" required><br/>
+        <input type="text" name="surname" placeholder="Surname" required><br>
+        <input type="text" name="name" placeholder="Name" required><br>
+        <input type="text" name="middlename" placeholder="Middle Name"><br>
+        <input type="text" name="address" placeholder="Address" required><br>
+        <input type="text" name="contact_number" placeholder="Contact_number" required><br>
 
-        <label for="name" class="label">Name</label>
-        <input type="text" name="name" id="name" class="field" required><br/>
+        <button type="reset">Clear Fields</button>
+        <button type="submit">Save</button>
+    </form>
+</section>
 
-        <label for="middlename" class="label">Middle name</label>
-        <input type="text" name="middlename" id="middlename" class="field"><br/>
+<!-- READ -->
+<section id="read" class="content">
+    <h1>View Students</h1>
 
-        <label for="address" class="label">Address</label>
-        <input type="text" name="address" id="address" class="field"><br/>
+    <?php
+    require_once '../includes/db.php';
 
-        <label for="contact" class="label">Mobile Number</label>
-        <input type="text" name="contact" id="contact" class="field"><br/>
+    $stmt = $pdo->query("SELECT * FROM students");
+    $students = $stmt->fetchAll();
 
-        <div id="btncontainer">
-            <button type="button" id="clrbtn" class="btns">Clear Fields</button><br/>
-            <button type="submit" id="savebtn" class="btns">Save</button>
-        </div>
+    echo "Total students: " . count($students); // DEBUG
+    ?>
 
-        <div id="success-toast" class="toast-hidden">
-            Registration Successful!
-        </div>
-    </form>   
+    <?php if (count($students) > 0): ?>
+    <table border="1" style="margin:auto;">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Surname</th>
+            <th>Address</th>
+            <th>Contact_number</th>
+        </tr>
 
-    </section>
+        <?php foreach ($students as $s): ?>
+        <tr>
+            <td><?= $s['id'] ?></td>
+            <td><?= $s['name'] ?></td>
+            <td><?= $s['surname'] ?></td>
+            <td><?= $s['address'] ?></td>
+            <td><?= $s['contact_number'] ?></td>
+        </tr>
+        <?php endforeach; ?>
+    </table>
 
-<br/><br/><br/><br/>
+    <?php else: ?>
+        <p>No students found.</p>
+    <?php endif; ?>
 
-    <section id="read" class="content"> View Students </section>
-    <section id="update" class="content"> Update Student Records </section>
-    <section id="delete" class="content"> Remove Student Records </section>
+</section>
 
+<!-- UPDATE -->
+<section id="update" class="content">
+    <h1>Update Student Records</h1>
 
+    <form action="../includes/update.php" method="POST">
+        <input type="number" name="id" placeholder="Enter Student ID" required><br>
+        <input type="text" name="name" placeholder="New Name"><br>
+        <input type="text" name="surname" placeholder="New Surname"><br>
+        <input type="text" name="address" placeholder="New Address"><br>
+        <input type="text" name="contact_number" placeholder="Contact_number"><br>
+        <button type="submit">Update</button>
+    </form>
+</section>
 
-    <script src="script.js"></script>
+<!-- DELETE -->
+<section id="delete" class="content">
+    <h1>Remove Student Records</h1>
+
+    <form action="../includes/delete.php" method="POST">
+        <input type="contact_number" name="id" placeholder="Enter Student ID" required><br>
+        <button type="submit">Delete</button>
+    </form>
+</section>
+
+<script src="script.js"></script>
 </body>
 </html>
