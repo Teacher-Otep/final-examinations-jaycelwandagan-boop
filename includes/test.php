@@ -1,4 +1,14 @@
 <?php
-echo'<p>Hello world</p>';
+require_once 'db.php';
 
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    $id = (int)$_POST['id'];
+
+    $stmt = $pdo->prepare("DELETE FROM students WHERE id = ?");
+    $stmt->execute([$id]);
+
+    header("Location: ../public/index.php");
+    exit();
+}
 ?>
