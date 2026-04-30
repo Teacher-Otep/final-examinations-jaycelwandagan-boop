@@ -7,7 +7,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $surname = $_POST['surname'] ?? '';
     $middlename = $_POST['middlename'] ?? '';
     $address = $_POST['address'] ?? '';
-    $contact = $_POST['contact'] ?? '';
+    $contact = $_POST['contact_number'] ?? '';
 
     try {
         $sql = "INSERT INTO students (name, surname, middlename, address, contact_number) 
@@ -19,7 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             ':surname'    => $surname,
             ':middlename' => $middlename,
             ':address'    => $address,
-            ':contact'    => $contact
+            ':contact'    => $contact_number
         ]);
 
         header("Location: ../public/index.php?status=success");
